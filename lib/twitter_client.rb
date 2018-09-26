@@ -1,29 +1,29 @@
 class TwitterClient
     def self.timeline
-      client.home.timeline
+      client.home_timeline
     end
-
-    def self.tweet(message)
-      client.update(message)
-    end
-
-    def self.by_user
+  
+    def self.by_user(term)
       tweets = []
       client.search("from:#{term}").each do |tweet|
         user = tweet.user || break
         tweets << {
-            id: tweet.id,
-            text: tweet.text,
-            user: {
-                screen_name: user.screen_name,
-                name: user.name,
-                url: user_url,
-                profile_image_url: user.profile_image_url.to_s
-            }
+          id: tweet.id,
+          text: tweet.text,
+          user: {
+            screen_name: user.screen_name,
+            name: user.name,
+            url: user.url,
+            profile_image_url: user.profile_image_url.to_s
+          }
         }
       end
     end
-
+  
+    def self.tweet(message)
+      client.update(message)
+    end
+  
     private
       def self.client
         Twitter::REST::Client.new do |config|
@@ -33,4 +33,4 @@ class TwitterClient
           config.access_token_secret  = ENV['TWITTER_ACCESS_TOKEN_SECRET']
         end
       end
-end
+  end
